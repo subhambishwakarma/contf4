@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="sto.css">
+  <style>
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <form id="employeeForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" required>
+    <br>
+
+    <label for="profession">Profession:</label>
+    <input type="text" id="profession" required>
+    <br>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" required>
+    <br>
+
+    <button type="submit">Add Employee</button>
+  </form>
+
+  <div id="error" class="error" style="display: none;"></div>
+  <div id="success" class="success" style="display: none;"></div>
+
+  <h2>Added Employees</h2>
+  <div id="employeeList"></div>
+
+  <script>
+    let employees = [];
+
+    function displayEmployees() {
+      const employeeList = document.getElementById('employeeList');
+      employeeList.innerHTML = '';
+
+      employees.forEach((employee) => {
+        const employeeDiv = document.createElement('div');
+        employeeDiv.innerHTML = `<span>${employee.name}, ${employee.profession}, ${employee.age}</span>`;
+
+        const deleteButton = document.createElement('button');
+        deleteButton.innerText = 'Delete';
+        deleteButton.addEventListener('click', () => {
+          deleteEmployee(employee.id);
+          employeeDiv.remove();
+        });
+
+        employeeDiv.appendChild(deleteButton);
+        employeeList.appendChild(employeeDiv);
+      });
+    }
+
+    function addEmployee(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const profession = document.getElementById('profession').value;
+      const age = document.getElementById('age').value;
+
+      if (!name || !profession || !age) {
+        const error = document.getElementById('error');
+        error.innerText = 'Please fill in all required fields.';
+        error.style.display = 'block';
+        return;
+      }
+
+      const id = employees.length + 1;
+      const employee = { id, name, profession, age };
+      employees.push(employee);
+
+      const success = document.getElementById('success');
+      success.innerText = 'Employee added successfully.';
+      success.style.display = 'block';
+
+      displayEmployees();
+
+      document.getElementById('employeeForm').reset();
+    }
+
+    function deleteEmployee(id) {
+      employees = employees.filter((employee) => employee.id !== id);
+    }
+
+    const employeeForm = document.getElementById('employeeForm');
+    employeeForm.addEventListener('submit', addEmployee);
+  </script>
+</body>
+</html>
